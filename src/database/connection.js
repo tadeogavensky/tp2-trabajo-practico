@@ -1,6 +1,6 @@
 import { Sequelize } from "../../models";
 
-const sequelize = new Sequelize(process.env.DATABASE_URL, {
+const connection = new Sequelize(process.env.DATABASE_URL, {
   dialect: "postgres",
   dialectOptions: {
     ssl: {
@@ -10,4 +10,4 @@ const sequelize = new Sequelize(process.env.DATABASE_URL, {
   },
 });
 
-export default sequelize;
+export default connection;

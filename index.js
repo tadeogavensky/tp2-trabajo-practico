@@ -1,6 +1,6 @@
 import app from "./src/app.js";
 import "dotenv/config";
-import sequelize from "./src/database/connection.js";
+import connection from "./src/database/connection.js";
 
 const PORT = process.env.EXPRESS_PORT || 3000;
 
@@ -9,10 +9,10 @@ app.listen(PORT, () => {
 });
 
 try {
-  await sequelize.authenticate();
+  await connection.authenticate();
   console.log("Conexión establecida correctamente.");
 } catch (error) {
   console.error("Error al conectar:", error);
 } finally {
-  await sequelize.close();
+  await connection.close();
 }

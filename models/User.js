@@ -1,5 +1,5 @@
 import { DataTypes, Model } from "sequelize";
-import sequelize from "../database/connection";
+import connection from "../database/connection";
 
 class User extends Model {}
 User.init(
@@ -12,14 +12,26 @@ User.init(
     firstName: {
       type: DataTypes.STRING,
       allowNull: false,
+      validate: {
+        notEmpty: true,
+        len: [2, 50],
+      },
     },
     lastName: {
       type: DataTypes.STRING,
       allowNull: false,
+      validate: {
+        notEmpty: true,
+        len: [2, 50],
+      },
     },
     age: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        min: 0,
+        max: 120,
+      },
     },
     username: {
       type: DataTypes.STRING,
@@ -30,15 +42,21 @@ User.init(
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
+      validate: {
+        isEmail: true,
+      },
     },
     hashedPassword: {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
+      validate: {
+        is: /^[0-9a-f]{64}$/i, // SHA-256 hash
+      },
     },
   },
   {
-    sequelize,
+    sequelize: connection,
     modelName: "User",
     tableName: "users",
     timestamps: true,
