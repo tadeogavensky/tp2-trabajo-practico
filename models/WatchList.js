@@ -27,4 +27,7 @@ WatchList.init(
   }
 );
 
+WatchList.belongsTo(connection.models.User, { foreignKey: "userId" });
+WatchList.belongsTo(connection.models.Movie, { foreignKey: "movieId" });
+
 export default WatchList;
