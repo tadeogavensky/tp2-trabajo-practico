@@ -49,10 +49,6 @@ User.init(
     hashedPassword: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true,
-      validate: {
-        is: /^[0-9a-f]{64}$/i, // SHA-256 hash
-      },
     },
   },
   {

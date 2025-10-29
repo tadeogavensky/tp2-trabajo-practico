@@ -1,43 +1,28 @@
-'use strict';
+import sequelize from '../src/database/connection.js'
 
-const fs = require('fs');
-const path = require('path');
-const Sequelize = require('sequelize');
-const process = require('process');
-const basename = path.basename(__filename);
-const env = process.env.NODE_ENV || 'development';
-const config = require(__dirname + '/../config/config.json')[env];
-const db = {};
+import User from './User.js'
+import Movie from './Movie.js'
+import Rating from './Rating.js'
+import Favorite from './Favorite.js'
+import WatchList from './WatchList.js'
 
-let sequelize;
-if (config.use_env_variable) {
-  sequelize = new Sequelize(process.env[config.use_env_variable], config);
-} else {
-  sequelize = new Sequelize(config.database, config.username, config.password, config);
-}
+// Users ↔ Ratings
+User.hasMany(Rating, { foreignKey: 'userId', onDelete: 'CASCADE', onUpdate: 'CASCADE' })
+Rating.belongsTo(User, { foreignKey: 'userId' })
+Movie.hasMany(Rating, { foreignKey: 'movieId', onDelete: 'CASCADE', onUpdate: 'CASCADE' })
+Rating.belongsTo(Movie, { foreignKey: 'movieId' })
 
-fs
-  .readdirSync(__dirname)
-  .filter(file => {
-    return (
-      file.indexOf('.') !== 0 &&
-      file !== basename &&
-      file.slice(-3) === '.js' &&
-      file.indexOf('.test.js') === -1
-    );
-  })
-  .forEach(file => {
-    const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
-    db[model.name] = model;
-  });
+// Users ↔ Favorites
+User.hasMany(Favorite, { foreignKey: 'userId', onDelete: 'CASCADE', onUpdate: 'CASCADE' })
+Favorite.belongsTo(User, { foreignKey: 'userId' })
+Movie.hasMany(Favorite, { foreignKey: 'movieId', onDelete: 'CASCADE', onUpdate: 'CASCADE' })
+Favorite.belongsTo(Movie, { foreignKey: 'movieId' })
 
-Object.keys(db).forEach(modelName => {
-  if (db[modelName].associate) {
-    db[modelName].associate(db);
-  }
-});
+// Users ↔ WatchList
+User.hasMany(WatchList, { foreignKey: 'userId', onDelete: 'CASCADE', onUpdate: 'CASCADE' })
+WatchList.belongsTo(User, { foreignKey: 'userId' })
+Movie.hasMany(WatchList, { foreignKey: 'movieId', onDelete: 'CASCADE', onUpdate: 'CASCADE' })
+WatchList.belongsTo(Movie, { foreignKey: 'movieId' })
 
-db.sequelize = sequelize;
-db.Sequelize = Sequelize;
-
-module.exports = db;
+export { sequelize, User, Movie, Rating, Favorite, WatchList }
+export default sequelize

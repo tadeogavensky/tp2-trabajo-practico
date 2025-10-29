@@ -1,5 +1,7 @@
 import { Model, DataTypes } from "sequelize";
 import connection from "../database/connection";
+import User from "./User";
+import Movie from "./Movie";
 
 class WatchList extends Model {}
 
@@ -24,10 +26,11 @@ WatchList.init(
     modelName: "WatchList",
     tableName: "watchlists",
     timestamps: true,
+
+    indexes: [{ fields: ["userId", "movieId"] }, { fields: ["movieId"] }],
   }
 );
 
-WatchList.belongsTo(connection.models.User, { foreignKey: "userId" });
-WatchList.belongsTo(connection.models.Movie, { foreignKey: "movieId" });
+
 
 export default WatchList;

@@ -1,5 +1,7 @@
 import { Model, DataTypes } from "sequelize";
 import connection from "../database/connection";
+import User from "./User";
+import Movie from "./Movie";
 
 class Rating extends Model {}
 
@@ -19,7 +21,7 @@ Rating.init(
       allowNull: false,
     },
     score: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.DECIMAL(2, 1),
       allowNull: false,
       validate: {
         min: 0.5,
@@ -43,7 +45,5 @@ Rating.init(
   }
 );
 
-Rating.belongsTo(sequelize.models.User, { foreignKey: "userId" });
-Rating.belongsTo(sequelize.models.Movie, { foreignKey: "movieId" });
 
 export default Rating;

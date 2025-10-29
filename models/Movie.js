@@ -9,7 +9,7 @@ Movie.init(
       primaryKey: true,
       autoIncrement: true,
     },
-    tmbdId: {
+    tmdbId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       unique: true,
@@ -27,7 +27,7 @@ Movie.init(
       allowNull: true,
     },
     releaseDate: {
-      type: DataTypes.DATE,
+      type: DataTypes.DATEONLY,
       allowNull: true,
     },
     originalLanguage: {
@@ -37,6 +37,7 @@ Movie.init(
     last_fetched_at: {
       type: DataTypes.DATE,
       allowNull: false,
+      defaultValue: DataTypes.NOW,
     },
   },
 
@@ -48,7 +49,7 @@ Movie.init(
     indexes: [
       {
         unique: true,
-        fields: ["tmbdId"],
+        fields: ["tmdbId"],
       },
       {
         fields: ["last_fetched_at"],
