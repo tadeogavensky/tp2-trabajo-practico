@@ -1,7 +1,6 @@
 import { Model, DataTypes } from "sequelize";
-import connection from "../database/connection";
-import User from "./User";
-import Movie from "./Movie";
+import connection from "../src/database/connection.js";
+
 
 class Favorite extends Model {}
 Favorite.init(
