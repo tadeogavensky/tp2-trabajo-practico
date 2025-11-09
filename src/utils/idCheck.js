@@ -1,2 +1,2 @@
-/* export function isUserIdValid(id) {}
-export function isMovieIdValid(id) {} */
+export function isUserIdValid(id) {}
+export function isMovieIdValid(id) {}
