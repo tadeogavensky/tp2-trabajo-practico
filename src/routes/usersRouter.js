@@ -6,7 +6,7 @@ import {
   validateSignUpFields,
 } from "../middlewares/userMiddleware.js";
 
-import UserController from "../controllers/UserController.js";
+import { UserController } from "../controllers/index.js";
 import UserService from "../services/userService.js";
 const usersRouter = Router();
 
