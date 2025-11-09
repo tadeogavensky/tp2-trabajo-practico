@@ -1,12 +1,12 @@
 import express from "express";
-import usersRouter from "./routes/usersRouter.js";
+import routes from "./routes/index.js";
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Routers
-app.use("/users", usersRouter);
+app.use("/api", routes);
 
 app.use("/", (req, res) => {
   res.send("Peli API hit! 📽️🍿");
