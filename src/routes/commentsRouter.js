@@ -1,5 +1,5 @@
 import { Router } from "express";
-//import {} from "../middlewares/commentsMiddleware.js";
+//import {} from "../middlewares/commentMiddleware.js";
 
 const commentsRouter = Router()
 
