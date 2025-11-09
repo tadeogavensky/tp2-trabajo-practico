@@ -6,6 +6,7 @@ import {
   isLastNameValid,
   isAgeValid,
   verifyJWT,
+  isUsernameValid,
 } from "../utils/user.js";
 
 import USER_FIELD_ERRORS  from "../errors/user.js";
@@ -100,6 +101,12 @@ export async function validateSignUpFields(req, res, next) {
       .json({
         error: USER_FIELD_ERRORS.LAST_NAME_INVALID,
       });
+  }
+
+  if (!isUsernameValid(username)) {
+    return res
+      .status(400)
+      .json({ error: USER_FIELD_ERRORS.USERNAME_INVALID });
   }
 
   if (!isAgeValid(age)) {

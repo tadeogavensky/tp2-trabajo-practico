@@ -15,7 +15,7 @@ export function isPasswordStrong(password) {
 }
 
 export function isAgeValid(age) {
-  return age > 0 && age <= 120;
+  return age >= 0 && age <= 120;
 }
 
 export function isFirstNameValid(firstName) {
@@ -35,6 +35,14 @@ export function isLastNameValid(lastName) {
     lastName.length >= 2 &&
     lastName.length <= 50 &&
     !hasNumber.test(lastName)
+  );
+}
+
+export function isUsernameValid(username) {
+  return (
+    typeof username === "string" &&
+    username.length >= 2 &&
+    username.length <= 50
   );
 }
 
