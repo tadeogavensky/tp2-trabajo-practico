@@ -1,12 +1,13 @@
 import { Router } from "express";
 import {
+  authenticate,
   checkUserEmailExists,
   checkUserUsernameExists,
   validateLoginFields,
   validateSignUpFields,
 } from "../middlewares/userMiddleware.js";
 
-import UserController from "../controllers/UserController.js";
+import UserController from "../controllers/userController.js";
 import UserService from "../services/userService.js";
 const usersRouter = Router();
 
@@ -27,6 +28,12 @@ usersRouter.post(
   "/login",
   validateLoginFields,
   userController.login.bind(userController)
+);
+
+usersRouter.get(
+  "/profile",
+  authenticate,
+  userController.getUserProfile.bind(userController)
 );
 
 export default usersRouter;

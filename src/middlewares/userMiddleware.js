@@ -5,14 +5,17 @@ import {
   isFirstNameValid,
   isLastNameValid,
   isAgeValid,
+  verifyJWT,
 } from "../utils/user.js";
+
+import USER_FIELD_ERRORS  from "../errors/user.js";
 
 export async function checkUserEmailExists(req, res, next) {
   try {
     const { email } = req.body;
     const existing = await User.findOne({ where: { email } });
     if (existing) {
-      return res.status(409).json({ error: "User already exists" });
+      return res.status(409).json({ error: USER_FIELD_ERRORS.EMAIL_TAKEN });
     }
 
     next();
@@ -26,7 +29,7 @@ export async function checkUserUsernameExists(req, res, next) {
     const { username } = req.body;
     const existing = await User.findOne({ where: { username } });
     if (existing) {
-      return res.status(409).json({ error: "Username already taken" });
+      return res.status(409).json({ error: USER_FIELD_ERRORS.USERNAME_TAKEN });
     }
 
     next();
@@ -39,7 +42,7 @@ export async function validateEmailFormat(req, res, next) {
   const { email } = req.body;
 
   if (!isEmailValid(email)) {
-    return res.status(400).json({ error: "Invalid email format" });
+    return res.status(400).json({ error: USER_FIELD_ERRORS.EMAIL_INVALID });
   }
 
   next();
@@ -49,7 +52,7 @@ export async function validatePasswordStrength(req, res, next) {
   const { password } = req.body;
 
   if (!isPasswordStrong(password)) {
-    return res.status(400).json({ error: "Password is not strong enough" });
+    return res.status(400).json({ error: USER_FIELD_ERRORS.PASSWORD_WEAK });
   }
 
   next();
@@ -58,28 +61,51 @@ export async function validatePasswordStrength(req, res, next) {
 export async function validateSignUpFields(req, res, next) {
   console.log("Validating sign-up fields");
   const { firstName, lastName, age, username, email, password } = req.body;
-  if (!email || !password || !firstName || !lastName || !age || !username) {
-    return res.status(400).json({ error: "Missing required fields" });
+  const missingFields = [];
+
+  if (!email) missingFields.push("email");
+  if (!password) missingFields.push("password");
+  if (!firstName) missingFields.push("firstName");
+  if (!lastName) missingFields.push("lastName");
+  if (!age) missingFields.push("age");
+  if (!username) missingFields.push("username");
+
+  if (missingFields.length > 0) {
+    return res
+      .status(400)
+      .json({ error: "Missing required fields", fields: missingFields });
   }
 
   if (!isEmailValid(email)) {
-    return res.status(400).json({ error: "Invalid email format" });
+    return res.status(400).json({ error: USER_FIELD_ERRORS.EMAIL_INVALID});
   }
 
   if (!isPasswordStrong(password)) {
-    return res.status(400).json({ error: "Password is not strong enough" });
+    return res.status(400).json({
+      error: USER_FIELD_ERRORS.PASSWORD_WEAK,
+    });
   }
 
   if (!isFirstNameValid(firstName)) {
-    return res.status(400).json({ error: "Invalid first name" });
+    return res
+      .status(400)
+      .json({
+        error: USER_FIELD_ERRORS.FIRST_NAME_INVALID,
+      });
   }
 
   if (!isLastNameValid(lastName)) {
-    return res.status(400).json({ error: "Invalid last name" });
+    return res
+      .status(400)
+      .json({
+        error: USER_FIELD_ERRORS.LAST_NAME_INVALID,
+      });
   }
 
   if (!isAgeValid(age)) {
-    return res.status(400).json({ error: "Invalid age" });
+    return res
+      .status(400)
+      .json({ error: USER_FIELD_ERRORS.AGE_INVALID });
   }
 
   next();
@@ -87,12 +113,36 @@ export async function validateSignUpFields(req, res, next) {
 
 export async function validateLoginFields(req, res, next) {
   const { email, password } = req.body;
-  if (!email || !password) {
-    return res.status(400).json({ error: "Missing required fields" });
+  const missingFields = [];
+
+  if (!email) missingFields.push("email");
+  if (!password) missingFields.push("password");
+
+  if (missingFields.length > 0) {
+    return res
+      .status(400)
+      .json({ error: "Missing required fields", fields: missingFields });
   }
 
   if (!isEmailValid(email)) {
-    return res.status(400).json({ error: "Invalid email format" });
+    return res.status(400).json({ error: USER_FIELD_ERRORS.EMAIL_INVALID });
   }
+  next();
+}
+
+export async function authenticate(req, res, next) {
+  const authHeader = req.headers.authorization;
+  const token = authHeader && authHeader.split(" ")[1]; // Bearer TOKEN
+
+  if (!token) {
+    return res.status(401).json({ error: USER_FIELD_ERRORS.TOKEN_INVALID });
+  }
+  const user = verifyJWT(token);
+  if (!user) {
+    return res.status(403).json({ error: USER_FIELD_ERRORS.TOKEN_INVALID });
+  }
+
+  req.user = user;
+
   next();
 }

@@ -37,20 +37,16 @@ class UserService {
     const user = await User.findOne({ where: { email } });
 
     if (!user) {
-      return false;
+      return null;
     }
 
     if (user && (await comparePassword(password, user.hashedPassword))) {
-      return true;
+      return user;
     }
   }
 
   async updateUser(id, userData) {
     const user = await User.findByPk(id);
-
-    if (!user) {
-      throw new Error("User not found");
-    }
 
     await user.update(userData);
     return user;
@@ -58,10 +54,6 @@ class UserService {
 
   async deleteUser(id) {
     const user = await User.findByPk(id);
-
-    if (!user) {
-      throw new Error("User not found");
-    }
 
     await user.destroy();
     return user;

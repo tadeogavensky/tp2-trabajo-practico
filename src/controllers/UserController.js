@@ -1,4 +1,5 @@
-import { hashPassword } from "../utils/user.js";
+import { generateJWT, hashPassword } from "../utils/user.js";
+import  USER_FIELD_ERRORS  from "../errors/user.js";
 
 class UserController {
   constructor(userService) {
@@ -18,7 +19,10 @@ class UserController {
         hashedPassword,
       });
 
-      return res.status(201).json(newUser);
+      return res.status(201).json({
+        message: "User created successfully",
+        user: newUser,
+      });
     } catch (error) {
       return res.status(500).json({ error: error.message });
     }
@@ -27,14 +31,28 @@ class UserController {
   async login(req, res) {
     try {
       const { email, password } = req.body;
-      const isAuthenticated = await this.userService.authenticateUser(
-        email,
-        password
-      );
-      if (!isAuthenticated) {
-        return res.status(401).json({ error: "Invalid email or password" });
+      const user = await this.userService.authenticateUser(email, password);
+      if (!user) {
+        return res.status(401).json({ error: USER_FIELD_ERRORS.INVALID_CREDENTIALS });
       }
-      return res.status(200).json({ message: "Login successful" });
+      const token = generateJWT({ userId: user.id, email: user.email });
+      return res.status(200).json({ message: "Login successful", token });
+    } catch (error) {
+      return res.status(500).json({ error: error.message });
+    }
+  }
+
+  async getUserProfile(req, res) {
+    const { userId } = req.user;
+
+    try {
+      const user = await this.userService.getUserById(userId);
+      if (!user) {
+        return res.status(404).json({ error: USER_FIELD_ERRORS.USER_NOT_FOUND });
+      }
+
+      const { hashedPassword, ...safeUser } = user.toJSON(); // Exclude hashedPassword
+      return res.status(200).json(safeUser);
     } catch (error) {
       return res.status(500).json({ error: error.message });
     }
