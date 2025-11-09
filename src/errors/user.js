@@ -14,6 +14,7 @@ const USER_FIELD_ERRORS = {
   NO_TOKEN: "No token provided.",
   INVALID_CREDENTIALS: "Invalid email or password.",
   USER_NOT_FOUND: "User not found.",
+  UNAUTHORIZED: "Unauthorized access.",
 };
 
 export default USER_FIELD_ERRORS;

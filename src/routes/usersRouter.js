@@ -5,6 +5,7 @@ import {
   checkUserUsernameExists,
   validateLoginFields,
   validateSignUpFields,
+  validateUpdateFields,
 } from "../middlewares/userMiddleware.js";
 
 import { UserController } from "../controllers/index.js";
@@ -34,6 +35,21 @@ usersRouter.get(
   "/profile",
   authenticate,
   userController.getUserProfile.bind(userController)
+);
+
+usersRouter.put(
+  "/",
+  authenticate,
+  validateUpdateFields,
+  checkUserEmailExists,
+  checkUserUsernameExists,
+  userController.updateUser.bind(userController)
+)
+
+usersRouter.delete(
+  "/",
+  authenticate,
+  userController.deleteUser.bind(userController)
 );
 
 export default usersRouter;

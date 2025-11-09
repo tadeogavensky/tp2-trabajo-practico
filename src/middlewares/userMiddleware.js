@@ -9,13 +9,18 @@ import {
   isUsernameValid,
 } from "../utils/user.js";
 
-import USER_FIELD_ERRORS  from "../errors/user.js";
+import USER_FIELD_ERRORS from "../errors/user.js";
 
 export async function checkUserEmailExists(req, res, next) {
   try {
     const { email } = req.body;
-    const existing = await User.findOne({ where: { email } });
-    if (existing) {
+    const existingUser = await User.findOne({ where: { email } });
+
+    if (!req.user && existingUser) {
+      return res.status(409).json({ error: USER_FIELD_ERRORS.EMAIL_TAKEN });
+    }
+
+    if (req.user && existingUser && existingUser.id !== req.user.userId) {
       return res.status(409).json({ error: USER_FIELD_ERRORS.EMAIL_TAKEN });
     }
 
@@ -28,8 +33,13 @@ export async function checkUserEmailExists(req, res, next) {
 export async function checkUserUsernameExists(req, res, next) {
   try {
     const { username } = req.body;
-    const existing = await User.findOne({ where: { username } });
-    if (existing) {
+    const existingUser = await User.findOne({ where: { username } });
+
+    if (!req.user && existingUser) {
+      return res.status(409).json({ error: USER_FIELD_ERRORS.USERNAME_TAKEN });
+    }
+
+    if (req.user && existingUser && existingUser.id !== req.user.userId) {
       return res.status(409).json({ error: USER_FIELD_ERRORS.USERNAME_TAKEN });
     }
 
@@ -78,7 +88,7 @@ export async function validateSignUpFields(req, res, next) {
   }
 
   if (!isEmailValid(email)) {
-    return res.status(400).json({ error: USER_FIELD_ERRORS.EMAIL_INVALID});
+    return res.status(400).json({ error: USER_FIELD_ERRORS.EMAIL_INVALID });
   }
 
   if (!isPasswordStrong(password)) {
@@ -88,31 +98,23 @@ export async function validateSignUpFields(req, res, next) {
   }
 
   if (!isFirstNameValid(firstName)) {
-    return res
-      .status(400)
-      .json({
-        error: USER_FIELD_ERRORS.FIRST_NAME_INVALID,
-      });
+    return res.status(400).json({
+      error: USER_FIELD_ERRORS.FIRST_NAME_INVALID,
+    });
   }
 
   if (!isLastNameValid(lastName)) {
-    return res
-      .status(400)
-      .json({
-        error: USER_FIELD_ERRORS.LAST_NAME_INVALID,
-      });
+    return res.status(400).json({
+      error: USER_FIELD_ERRORS.LAST_NAME_INVALID,
+    });
   }
 
   if (!isUsernameValid(username)) {
-    return res
-      .status(400)
-      .json({ error: USER_FIELD_ERRORS.USERNAME_INVALID });
+    return res.status(400).json({ error: USER_FIELD_ERRORS.USERNAME_INVALID });
   }
 
   if (!isAgeValid(age)) {
-    return res
-      .status(400)
-      .json({ error: USER_FIELD_ERRORS.AGE_INVALID });
+    return res.status(400).json({ error: USER_FIELD_ERRORS.AGE_INVALID });
   }
 
   next();
@@ -134,6 +136,38 @@ export async function validateLoginFields(req, res, next) {
   if (!isEmailValid(email)) {
     return res.status(400).json({ error: USER_FIELD_ERRORS.EMAIL_INVALID });
   }
+  next();
+}
+
+export async function validateUpdateFields(req, res, next) {
+  const { firstName, lastName, age, username, email, password } = req.body;
+
+  if (firstName && !isFirstNameValid(firstName)) {
+    return res
+      .status(400)
+      .json({ error: USER_FIELD_ERRORS.FIRST_NAME_INVALID });
+  }
+
+  if (lastName && !isLastNameValid(lastName)) {
+    return res.status(400).json({ error: USER_FIELD_ERRORS.LAST_NAME_INVALID });
+  }
+
+  if (username && !isUsernameValid(username)) {
+    return res.status(400).json({ error: USER_FIELD_ERRORS.USERNAME_INVALID });
+  }
+
+  if (email && !isEmailValid(email)) {
+    return res.status(400).json({ error: USER_FIELD_ERRORS.EMAIL_INVALID });
+  }
+
+  if (password && !isPasswordStrong(password)) {
+    return res.status(400).json({ error: USER_FIELD_ERRORS.PASSWORD_WEAK });
+  }
+
+  if (age && !isAgeValid(age)) {
+    return res.status(400).json({ error: USER_FIELD_ERRORS.AGE_INVALID });
+  }
+
   next();
 }
 
