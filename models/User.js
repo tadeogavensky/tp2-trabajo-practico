@@ -25,19 +25,20 @@ User.init(
         len: [2, 50],
       },
     },
-    age: {
+    /*     // Sugiero remover la edad y el username, no esta en el frontend
+age: {      
       type: DataTypes.INTEGER,
       allowNull: false,
       validate: {
         min: 0,
         max: 120,
       },
-    },
+    }, 
     username: {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
-    },
+    },*/
     email: {
       type: DataTypes.STRING,
       allowNull: false,
