@@ -1,4 +1,4 @@
-import { User } from "../models/index.js";
+import { User } from "../../models/index.js";
 import { comparePassword } from "../utils/user.js";
 class UserService {
   async getAllUsers() {
