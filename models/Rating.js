@@ -26,13 +26,6 @@ Rating.init(
         max: 5,
       },
     },
-    comment: {
-      type: DataTypes.TEXT,
-      allowNull: true,
-      validate: {
-        len: [0, 1000],
-      },
-    },
   },
   {
     sequelize: connection,

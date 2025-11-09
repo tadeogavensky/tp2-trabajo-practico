@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 
-import usersRouter from "./routes/usersRouter.js";
+import routes from "./routes/index.js";
 
 const app = express();
 app.use(express.json());
@@ -26,7 +26,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 // Routers
-app.use("/users", usersRouter);
+app.use("/api", routes);
 
 app.use("/", (req, res) => {
   res.send("Peli API hit! 📽️🍿");
