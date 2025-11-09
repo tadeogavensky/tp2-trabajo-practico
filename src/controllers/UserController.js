@@ -6,6 +6,8 @@ class UserController {
     this.userService = userService;
   }
   async createUser(req, res) {
+    console.log("Signup endpoint hit! 🧑🏻‍🦱");
+
     try {
       const { firstName, lastName, age, username, email, password } = req.body;
       const hashedPassword = await hashPassword(password);
@@ -29,7 +31,7 @@ class UserController {
   }
 
   async login(req, res) {
-    console.log("Login endpoint hit! user 🧑🏻‍🦱");
+    console.log("Login endpoint hit! 🧑🏻‍🦱");
     try {
       const { email, password, rememberMe } = req.body;
       const user = await this.userService.authenticateUser(email, password);
