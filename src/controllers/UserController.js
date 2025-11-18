@@ -44,6 +44,16 @@ class UserController {
         { userId: user.id, email: user.email, username: user.username },
         rememberMe ? "7d" : "1h"
       );
+      res.cookie("payload", {
+        user: {
+          id: user.id,
+          email: user.email,
+          username: user.username,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          age: user.age,
+        },
+      });
       return res.status(200).json({
         user: {
           id: user.id,
