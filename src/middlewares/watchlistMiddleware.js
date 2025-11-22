@@ -1,6 +1,6 @@
 import WATCHLIST_ERRORS from "../errors/watchlist.js";
 
-export default function watchlistErrorHandler(err, req, res, next) {
+export async function watchlistErrorHandler(err, res) {
     console.error("Watchlist error:", err.message);
 
   // ITEM NOT FOUND

@@ -1,24 +1,51 @@
 import { Router } from "express";
-import { WatchlistController } from "../controllers/index.js";
+import WatchlistController from "../controllers/WatchlistController.js";
+import WatchListService from "../services/watchlistService.js";
 import { authenticate } from "../middlewares/userMiddleware.js";
-import watchlistErrorHandler from "../middlewares/watchlistErrorHandler.js";
-//import {} from "../middlewares/idCheckMiddleware.js";
+import { watchlistErrorHandler } from "../middlewares/watchlistMiddleware.js";
 
-const watchlistRouter = Router()
+const watchlistRouter = Router();
 
-// Get all items in watchlist
-watchlistRouter.get("/all",authenticate, watchlistErrorHandler, WatchlistController.getWatchlist);
+const watchlistController = new WatchlistController(new WatchListService());
 
-// Get a specific item in watchlist by ID
-watchlistRouter.get("/:id",authenticate, watchlistErrorHandler, WatchlistController.getWatchItemById);
+// CLEAR watchlist
+watchlistRouter.delete(
+  "/reset",
+  authenticate,
+  watchlistErrorHandler,
+  watchlistController.resetWatchlist.bind(watchlistController)
+);
 
-// Add a movie to the watchlist
-watchlistRouter.post("/:id",authenticate, watchlistErrorHandler, WatchlistController.addToWatchlist);
+// GET all
+watchlistRouter.get(
+  "/all",
+  authenticate,
+  watchlistErrorHandler,
+  watchlistController.getWatchlist.bind(watchlistController)
+);
 
-// Remove a movie from the watchlist by movie ID
-watchlistRouter.delete("/:id",authenticate, watchlistErrorHandler, WatchlistController.removeFromWatchlist); 
+// GET one
+watchlistRouter.get(
+  "/:id",
+  authenticate,
+  watchlistErrorHandler,
+  watchlistController.getWatchItemById.bind(watchlistController)
+);
 
-// Clear the entire watchlist
-watchlistRouter.delete("/reset", authenticate, watchlistErrorHandler, WatchlistController.resetWatchlist); 
+// ADD movie
+watchlistRouter.post(
+  "/:id",
+  authenticate,
+  watchlistErrorHandler,
+  watchlistController.addToWatchlist.bind(watchlistController)
+);
+
+// DELETE movie
+watchlistRouter.delete(
+  "/:id",
+  authenticate,
+  watchlistErrorHandler,
+  watchlistController.removeFromWatchlist.bind(watchlistController)
+);
 
 export default watchlistRouter;

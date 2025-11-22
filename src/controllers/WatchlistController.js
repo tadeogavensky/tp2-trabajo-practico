@@ -1,6 +1,8 @@
+import WatchListService from "../services/watchlistService.js";
+
 class WatchlistController {
-  constructor(watchlistService) {
-    this.watchlistService = watchlistService;
+  constructor(WatchListService) {
+    this.watchlistService = WatchListService;
   }
   async getWatchlist(req, res) {
     const userId = req.user.userId;
