@@ -1,4 +1,4 @@
-import sequelize from '../src/database/connection.js'
+import sequelize from '../database/connection.js'
 
 import User from './User.js'
 import Movie from './Movie.js'

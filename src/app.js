@@ -5,7 +5,7 @@ import routes from "./routes/index.js";
 
 const app = express();
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true })); // Set to false when wrapping dev work
 
 const ALLOWED_ORIGINS = ["http://localhost:5173"];
 
