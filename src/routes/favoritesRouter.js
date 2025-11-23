@@ -2,7 +2,6 @@ import { Router } from "express";
 import FavoriteController from "../controllers/FavoriteController.js";
 import favoritesService from "../services/favoritesService.js";
 import { authenticate } from "../middlewares/userMiddleware.js";
-//import { watchlistErrorHandler } from "../middlewares/watchlistMiddleware.js";
 
 const favoritesRouter = Router();
 

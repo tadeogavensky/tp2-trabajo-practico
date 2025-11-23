@@ -2,7 +2,6 @@ import { Favorite } from "../models/index.js";
 import FAVORITE_ERRORS from "../errors/favorites.js";	
 
 class FavoriteService {
-	// Obtener todos los favoritos de un usuario
 	async getFavoritesByUser(userId) {
 		return await Favorite.findAll({ where: { userId } });
 	}
