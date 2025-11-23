@@ -1,4 +1,4 @@
-import { Comments, User } from "../../models/index.js";
+import { Comments, User } from "../models/index.js";
 
 class CommentsService {
 

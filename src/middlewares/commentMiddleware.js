@@ -1,4 +1,4 @@
-import { Comments } from "../../models/index.js";
+import Comments  from "../models/Comments.js"
 
 import CommentService from '../services/commentsService.js';
 

@@ -1,9 +1,10 @@
 
 
 import { Model, DataTypes } from "sequelize";
-import connection from "../src/database/connection.js";
+import connection from "../database/connection.js";
 
 class Comments extends Model { }
+
 Comments.init(
   {
     id: {
