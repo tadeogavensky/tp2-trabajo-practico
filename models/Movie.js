@@ -58,4 +58,11 @@ Movie.init(
   }
 );
 
+Movie.associate = (models) => {
+  Movie.hasMany(models.Comments, {
+    foreignKey: 'movieId',
+    as: 'comments',
+  });
+};
+
 export default Movie;
