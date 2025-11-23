@@ -12,15 +12,13 @@ const watchlistController = new WatchlistController(new WatchListService());
 watchlistRouter.delete(
   "/reset",
   authenticate,
-  watchlistErrorHandler,
-  watchlistController.resetWatchlist.bind(watchlistController)
+   watchlistController.resetWatchlist.bind(watchlistController)
 );
 
 // GET all
 watchlistRouter.get(
   "/all",
   authenticate,
-  watchlistErrorHandler,
   watchlistController.getWatchlist.bind(watchlistController)
 );
 
@@ -28,7 +26,6 @@ watchlistRouter.get(
 watchlistRouter.get(
   "/:id",
   authenticate,
-  watchlistErrorHandler,
   watchlistController.getWatchItemById.bind(watchlistController)
 );
 
@@ -36,7 +33,6 @@ watchlistRouter.get(
 watchlistRouter.post(
   "/:id",
   authenticate,
-  watchlistErrorHandler,
   watchlistController.addToWatchlist.bind(watchlistController)
 );
 
@@ -44,8 +40,7 @@ watchlistRouter.post(
 watchlistRouter.delete(
   "/:id",
   authenticate,
-  watchlistErrorHandler,
   watchlistController.removeFromWatchlist.bind(watchlistController)
 );
-
+watchlistRouter.use(watchlistErrorHandler);
 export default watchlistRouter;
