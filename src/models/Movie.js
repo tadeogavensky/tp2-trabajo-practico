@@ -1,5 +1,5 @@
 import { Model, DataTypes } from "sequelize";
-import connection from "../src/database/connection.js";
+import connection from "../database/connection.js";
 class Movie extends Model {}
 
 Movie.init(

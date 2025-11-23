@@ -3,7 +3,7 @@ import favoritesService from "./favoritesService.js";
 import moviesService from "./moviesService.js";
 import ratingsService from "./ratingsService.js";
 import userService from "./userService.js";
-import watchlistService from "./watchlistService.js";
+import WatchListService from "./watchlistService.js";
 
 export {
   commentsService,

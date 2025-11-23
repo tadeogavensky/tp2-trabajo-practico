@@ -1,5 +1,5 @@
 import { Model, DataTypes } from "sequelize";
-import connection from "../src/database/connection.js";
+import connection from "../database/connection.js";
 
 
 class WatchList extends Model {}
@@ -10,14 +10,26 @@ WatchList.init(
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
+      validate: {
+        min: 0,
+        isInt: true,
+      },
     },
     userId: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      validate: {
+        min: 0,
+        isInt: true,
+      },
     },
     movieId: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      validate: {
+        min: 0,
+        isInt: true,
+      },
     },
   },
   {

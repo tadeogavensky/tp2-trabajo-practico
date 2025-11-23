@@ -35,6 +35,7 @@ class UserController {
     try {
       const { email, password, rememberMe } = req.body;
       const user = await this.userService.authenticateUser(email, password);
+      console.log("🧉 ~ UserController ~ login ~ user ➡️ ", user)
       if (!user) {
         return res
           .status(401)
@@ -44,6 +45,7 @@ class UserController {
         { userId: user.id, email: user.email, username: user.username },
         rememberMe ? "7d" : "1h"
       );
+      console.log("JWT token generated", token);
       res.cookie("payload", {
         user: {
           id: user.id,

@@ -15,5 +15,6 @@ router.use("/watchlist", watchlistRouter);
 router.use("/favorites", favoritesRouter);
 router.use("/comments", commentsRouter);
 router.use("/ratings", ratingsRouter);
+router.get("/", (req, res) => {res.send("API root OK");});
 
 export default router;

@@ -6,10 +6,6 @@ const PORT = process.env.EXPRESS_PORT || 3000;
 
 export const SECRET_KEY = process.env.JWT_SECRET;
 
-app.listen(PORT, () => {
-  console.log(`Servidor corriendo en el puerto: ${PORT}`);
-});
-
 async function startServer() {
   try {
     await connection.authenticate();
