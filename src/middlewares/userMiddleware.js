@@ -178,12 +178,18 @@ export async function authenticate(req, res, next) {
   if (!token) {
     return res.status(401).json({ error: USER_FIELD_ERRORS.TOKEN_INVALID });
   }
-  const user = verifyJWT(token);
-  if (!user) {
-    return res.status(403).json({ error: USER_FIELD_ERRORS.TOKEN_INVALID });
-  }
+    const payload = verifyJWT(token);
+    
+    if (!payload || !payload.userId) {
+        return res.status(403).json({ error: 'TOKEN_INVALID_FORMAT' });
+    }
+    
+    const user = await User.findByPk(payload.userId);
 
-  req.user = user;
-
-  next();
+    if (!user) {
+        return res.status(404).json({ error: 'USER_NOT_FOUND' });
+    }
+    req.user = user; 
+    
+    next();
 }

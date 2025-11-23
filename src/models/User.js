@@ -59,4 +59,11 @@ User.init(
   }
 );
 
+User.associate = (models) => {
+  User.hasMany(models.Comments, {
+    foreignKey: 'userId',
+    as: 'comments',
+  });
+};
+
 export default User;
