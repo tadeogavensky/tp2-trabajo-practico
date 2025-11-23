@@ -8,8 +8,14 @@ export function isEmailValid(email) {
 }
 
 export function isPasswordStrong(password) {
+  if (!password) return false;
+
+  // Prevent very long strings from overwhelming the regex
+  if (password.length > 64) return false;
+
+  // Safe regex: checks length and character groups WITHOUT backtracking
   const passwordRegex =
-    /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,64}$/;
 
   return passwordRegex.test(password);
 }

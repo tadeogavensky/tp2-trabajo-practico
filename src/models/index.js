@@ -4,7 +4,7 @@ import User from './User.js'
 import Movie from './Movie.js'
 import Rating from './Rating.js'
 import Favorite from './Favorite.js'
-import Comments from "./Comments.js";
+import Comments from './Comments.js'
 import WatchList from './WatchList.js'
 
 // Users ↔ Ratings
