@@ -28,7 +28,7 @@ app.use(cors(corsOptions));
 // Routers
 app.use("/api", routes);
 
-app.use("/", (req, res) => {
+app.get("/", (req, res) => {
   res.send("Peli API hit! 📽️🍿");
 });
 
