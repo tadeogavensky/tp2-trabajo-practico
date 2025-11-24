@@ -35,5 +35,5 @@ export const isCommentAuthor = async (req, res, next) => {
     }
 };
 
-// NOTA: Asegúrate de que tengas otro middleware 'protect' o 'isAuthenticated' 
+// NOTA: Asegurate de que tengas otro middleware 'protect' o 'isAuthenticated' 
 // que se ejecute ANTES de este para poblar req.user.id
