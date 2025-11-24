@@ -1,6 +1,6 @@
 class FavoriteController {
-  constructor(favoriteService) {
-    this.favoriteService = favoriteService;
+  constructor(FavoriteService) {
+    this.favoriteService = FavoriteService;
   }
 
   // Obtener todos los favoritos de un usuario
