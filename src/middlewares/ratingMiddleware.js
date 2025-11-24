@@ -46,5 +46,3 @@ export function ratingErrorHandler(err, req, res, next) {
 
     return res.status(500).json({ error: "RATING_ERROR" });
 }
-
-export default { validateRatingBody, ratingErrorHandler };

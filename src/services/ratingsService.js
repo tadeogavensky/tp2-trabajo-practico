@@ -39,5 +39,4 @@ class RatingService {
 
 }
 
-const ratingService = new RatingService();
-export default ratingService;
+export default RatingService;

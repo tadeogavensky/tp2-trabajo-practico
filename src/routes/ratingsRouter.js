@@ -1,10 +1,14 @@
 import { Router } from "express";
 import RatingController from "../controllers/RatingController.js";
-import ratingService from "../services/ratingsService.js";
+import RatingService from "../services/ratingsService.js";
 import { authenticate } from "../middlewares/userMiddleware.js";
+import { 
+    validateRatingBody,
+    ratingErrorHandler
+} from "../middlewares/ratingMiddleware.js";
 
 const ratingsRouter = Router();
-const ratingController = new RatingController(ratingService);
+const ratingController = new RatingController(new RatingService());
 
 ratingsRouter.get(
     "/user/:userId",
@@ -22,12 +26,14 @@ ratingsRouter.get(
 ratingsRouter.post(
     "/",
     authenticate,
+    validateRatingBody,
     ratingController.addRating.bind(ratingController)
 );
 
 ratingsRouter.put(
     "/",
     authenticate,
+    validateRatingBody,
     ratingController.updateRating.bind(ratingController)
 );
 
@@ -37,4 +43,5 @@ ratingsRouter.delete(
     ratingController.removeRating.bind(ratingController)
 );
 
-export default ratingsRouter
+ratingsRouter.use(ratingErrorHandler);
+export default ratingsRouter;
