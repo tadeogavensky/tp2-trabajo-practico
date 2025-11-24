@@ -1,6 +1,6 @@
-import Comments  from "../models/Comments.js"
+import Comment  from "../models/Comment.js"
 
-import CommentService from '../services/commentsService.js';
+import CommentService from '../services/commentService.js';
 
 const commentService = new CommentService();
 
