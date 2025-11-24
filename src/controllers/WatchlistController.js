@@ -4,7 +4,7 @@ class WatchlistController {
     this.watchlistService = WatchListService;
   }
   async getWatchlist(req, res) {
-    const userId = req.user.userId;
+    const userId = req.user.id;
     try {
       const watchlist = await this.watchlistService.getWatchlist(userId);
       return res.status(200).json(watchlist);
@@ -13,7 +13,7 @@ class WatchlistController {
     }
   }
   async getWatchItemById(req, res) {
-    const userId = req.user.userId;
+    const userId = req.user.id;
     const movieId = req.params.id;
     try {
       const item = await this.watchlistService.getWatchItemById(
@@ -26,7 +26,7 @@ class WatchlistController {
     }
   }
   async addToWatchlist(req, res) {
-    const userId = req.user.userId;
+    const userId = req.user.id;
     const movieId = req.params.id;
     try {
       const newItem = await this.watchlistService.addToWatchlist(
@@ -39,7 +39,7 @@ class WatchlistController {
     }
   }
   async removeFromWatchlist(req, res) {
-    const userId = req.user.userId;
+    const userId = req.user.id;
     const movieId = req.params.id;
     try {
       await this.watchlistService.removeFromWatchlist(movieId, userId);
@@ -49,7 +49,7 @@ class WatchlistController {
     }
   }
   async resetWatchlist(req, res) {
-    const userId = req.user.userId;
+    const userId = req.user.id;
     try {
       await this.watchlistService.resetWatchlist(userId);
       return res.status(204).send();
