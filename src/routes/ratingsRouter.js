@@ -1,47 +1,41 @@
 import { Router } from "express";
-import RatingController from "../controllers/RatingController.js";
-import RatingService from "../services/ratingsService.js";
 import { authenticate } from "../middlewares/userMiddleware.js";
-import { 
-    validateRatingBody,
-    ratingErrorHandler
+import {
+  validateRatingBody,
+  ratingErrorHandler,
 } from "../middlewares/ratingMiddleware.js";
+import { ratingController } from "../containers/ratingContainer.js";
 
 const ratingsRouter = Router();
-const ratingController = new RatingController(new RatingService());
 
 ratingsRouter.get(
-    "/user/:userId",
-    authenticate,
-    ratingController.getAllRatings.bind(ratingController)
+  "/user",
+  authenticate,
+  ratingController.getAllRatings
 );
 
-//verificar si una pelicula fue calificada
 ratingsRouter.get(
-    "/check/:userId/:movieId",
-    authenticate,
-    ratingController.checkRating.bind(ratingController)
-)
+  "/check/:movieId",
+  authenticate,
+  ratingController.checkRating
+);
 
 ratingsRouter.post(
-    "/",
-    authenticate,
-    validateRatingBody,
-    ratingController.addRating.bind(ratingController)
+  "/",
+  authenticate,
+  validateRatingBody,
+  ratingController.addRating
 );
 
 ratingsRouter.put(
-    "/",
-    authenticate,
-    validateRatingBody,
-    ratingController.updateRating.bind(ratingController)
+  "/",
+  authenticate,
+  validateRatingBody,
+  ratingController.updateRating
 );
 
-ratingsRouter.delete(
-    "/",
-    authenticate,
-    ratingController.removeRating.bind(ratingController)
-);
+ratingsRouter.delete("/", authenticate, ratingController.removeRating);
 
 ratingsRouter.use(ratingErrorHandler);
+
 export default ratingsRouter;

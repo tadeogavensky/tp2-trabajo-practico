@@ -1,9 +1,9 @@
-import { Favorite } from "../models/index.js";
-import FAVORITE_ERRORS from "../errors/favorites.js";
+import { Favorite, Movie } from "../models/index.js";
+import FAVORITE_ERRORS from "../errors/favorite.js";
 
 class FavoriteService {
   getFavoritesByUser = async (userId) => {
-    return await Favorite.findAll({ where: { userId } });
+    return await Favorite.findAll({ where: { userId }, include: Movie});
   };
 
   isFavorite = async (userId, movieId) => {

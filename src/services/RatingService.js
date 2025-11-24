@@ -1,5 +1,5 @@
 import { Rating } from "../models/index.js";
-import RATING_ERRORS from "../errors/ratings.js";
+import RATING_ERRORS from "../errors/rating.js";
 
 class RatingService {
   getRatingsByUser = async (userId) => {

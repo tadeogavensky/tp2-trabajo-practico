@@ -31,7 +31,7 @@ Comment.init(
   {
     sequelize: connection,
     modelName: "Comment",
-    tableName: "Comment",
+    tableName: "comments",
     timestamps: true,
 
     indexes: [{ fields: ["userId", "movieId"] }, { fields: ["movieId"] }],

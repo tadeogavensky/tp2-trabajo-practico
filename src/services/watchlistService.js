@@ -1,5 +1,4 @@
-import { WatchList } from "../models/index.js";
-import MovieService from "../services/moviesService.js";
+import { Movie, WatchList } from "../models/index.js";
 import WATCHLIST_ERRORS from "../errors/watchlist.js";
 
 class WatchlistService {
@@ -9,12 +8,12 @@ class WatchlistService {
 
   findItem = async (movieId, userId) => {
     return await WatchList.findOne({
-      where: { movieId, userId },
+      where: { movieId, userId }, include: Movie
     });
   };
 
   getWatchlist = async (userId) => {
-    const items = await WatchList.findAll({ where: { userId } });
+    const items = await WatchList.findAll({ where: { userId }, include: Movie });
 
     if (items && items.length > 0) {
       console.log(

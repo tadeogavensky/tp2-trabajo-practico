@@ -1,39 +1,67 @@
-import Comment  from "../models/Comment.js"
+import COMMENT_ERRORS from "../errors/comment.js";
+import { commentService } from "../containers/commentContainer.js";
 
-import CommentService from '../services/commentService.js';
-
-const commentService = new CommentService();
-
-/**
- * verify if user is author
- */
 export const isCommentAuthor = async (req, res, next) => {
-    try {
-        const { commentId } = req.params; 
-        
-        const userId = req.user.id; 
+  try {
+    const { commentId } = req.params;
 
-        if (!commentId) {
-            return res.status(400).json({ message: "ID de comentario requerido." });
-        }
+    const userId = req.user.id;
 
-        const comment = await commentService.getCommentById(parseInt(commentId, 10));
-
-        if (!comment) {
-            return res.status(404).json({ message: "Comentario no encontrado." });
-        }
-
-        if (comment.userId !== userId) {
-            return res.status(403).json({ message: "Acceso denegado. Solo el autor puede modificar o eliminar este comentario." });
-        }
-
-        // author? continue
-        next();
-    } catch (error) {
-        console.error('Error en isCommentAuthor:', error);
-        res.status(500).json({ message: "Error interno del servidor al verificar la autoría." });
+    if (!commentId) {
+      return res
+        .status(400)
+        .json({ message: COMMENT_ERRORS.COMMENT_ID_REQUIRED });
     }
+
+    const comment = await commentService.getCommentById(
+      parseInt(commentId, 10)
+    );
+
+    if (!comment) {
+      return res
+        .status(404)
+        .json({ message: COMMENT_ERRORS.COMMENT_NOT_FOUND });
+    }
+
+    if (comment.userId !== userId) {
+      return res.status(403).json({
+        message: COMMENT_ERRORS.NOT_COMMENT_AUTHOR,
+      });
+    }
+
+    next();
+  } catch (error) {
+    console.error("Error en isCommentAuthor:", error);
+    res.status(500).json({ message: COMMENT_ERRORS.INTERNAL_ERROR });
+  }
 };
 
-// NOTA: Asegurate de que tengas otro middleware 'protect' o 'isAuthenticated' 
-// que se ejecute ANTES de este para poblar req.user.id
+export const validateNewComment = (req, res, next) => {
+  const { comment } = req.body;
+  const { movieId } = req.params;
+
+  if (!movieId) {
+    return res.status(400).json({ message: COMMENT_ERRORS.MOVIE_ID_REQUIRED });
+  }
+
+  if (!comment || comment.trim() === "") {
+    return res
+      .status(400)
+      .json({ message: COMMENT_ERRORS.COMMENT_TEXT_REQUIRED });
+  }
+
+  next();
+};
+
+
+export const validateCommentIdParam = (req, res, next) => {
+  const { commentId } = req.params;
+
+  if (!commentId) {
+    return res
+      .status(400)
+      .json({ message: COMMENT_ERRORS.COMMENT_ID_REQUIRED });
+  }
+
+  next();
+}

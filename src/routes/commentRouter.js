@@ -1,30 +1,38 @@
 import { Router } from "express";
-import CommentController from "../controllers/CommentController.js"; 
-import { authenticate } from "../middlewares/userMiddleware.js"; 
-import { isCommentAuthor } from "../middlewares/commentMiddleware.js"; 
-import CommentService from "../services/commentService.js";
+import { authenticate } from "../middlewares/userMiddleware.js";
+import {
+  isCommentAuthor,
+  validateCommentIdParam,
+  validateNewComment,
+} from "../middlewares/commentMiddleware.js";
+import { commentController } from "../containers/commentContainer.js";
 
 const commentRouter = Router();
-const commentController = new CommentController(new CommentService());
+
+commentRouter.get("/test", (req, res) => {
+  res.send("Comment router hit!");
+});
 
 commentRouter.post(
-  "/", 
-  authenticate, 
-  (req, res, next) => commentController.createComment(req, res, next)
+  "/:movieId",
+  authenticate,
+  validateNewComment,
+  commentController.createComment
 );
 
 commentRouter.put(
-  "/:commentId", 
-  authenticate, 
+  "/:commentId",
+  authenticate,
+  validateCommentIdParam,
   isCommentAuthor,
-  (req, res, next) => commentController.updateComment(req, res, next)
+  commentController.updateComment
 );
 
 commentRouter.delete(
-  "/:commentId", 
-  authenticate, 
-  isCommentAuthor, // Verifica que req.user.id == comment.userId
-  (req, res, next) => commentController.deleteComment(req, res, next)
+  "/:commentId",
+  authenticate,
+  isCommentAuthor,
+  commentController.deleteComment
 );
 
 export default commentRouter;

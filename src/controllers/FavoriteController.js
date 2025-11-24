@@ -1,15 +1,12 @@
 class FavoriteController {
-  constructor(FavoriteService) {
-    this.favoriteService = FavoriteService;
+  constructor(favoriteService) {
+    this.favoriteService = favoriteService;
   }
 
-  // Obtener todos los favoritos de un usuario
-  async getAllFavorites(req, res) {
+  getAllFavorites = async (req, res) => {
     console.log("Get favorites endpoint hit!");
     try {
-      const { userId } = req.params;
-      const favorites = await this.favoriteService.getFavoritesByUser(userId);
-      // Devuelve el array de favoritos
+      const favorites = await this.favoriteService.getFavoritesByUser(req.user.id);
       return res.status(200).json(favorites);
 
     } catch (error) {
@@ -17,19 +14,18 @@ class FavoriteController {
     }
   }
 
-  // Agregar película a favoritos
-  async addFavorite(req, res) {
+  addFavorite = async (req, res) => {
     console.log("Add to favorites endpoint hit!");
     try {
-      const { userId, movieId } = req.body;
+      const { movieId } = req.body;
 
-      if (!userId || !movieId) {
+      if (!movieId) {
         return res.status(400).json({ 
-          error: 'userId and movieId are required' 
+          error: 'movieId is required' 
         });
       }
 
-      const favorite = await this.favoriteService.addFavorite(userId, movieId);
+      const favorite = await this.favoriteService.addFavorite(req.user.id, movieId);
       
       return res.status(201).json({
         message: 'Movie added to favorites',
@@ -37,27 +33,22 @@ class FavoriteController {
       });
       
     } catch (error) {
-      // Si el error es por duplicado, devuelve 400 en lugar de 500
-      if (error.message.includes('already in favorites')) {
-        return res.status(400).json({ error: error.message });
-      }
       return res.status(500).json({ error: error.message });
     }
   }
 
-  // Eliminar de favoritos
-  async removeFavorite(req, res) {
+  removeFavorite = async (req, res) => {
     console.log("Remove from favorites endpoint hit!");
     try {
-      const { userId, movieId } = req.body; 
+      const { movieId } = req.body; 
 
-      if (!userId || !movieId) {
+      if (!movieId) {
         return res.status(400).json({ 
-          error: 'userId and movieId are required' 
+          error: 'movieId is required' 
         });
       }    
       
-      await this.favoriteService.removeFavorite(userId, movieId);
+      await this.favoriteService.removeFavorite(req.user.id, movieId);
 
       return res.status(200).json({ 
         message: 'Favorite removed successfully' 
@@ -71,13 +62,12 @@ class FavoriteController {
     }
   }
 
-  // Verificar si esta en favoritos
-  async checkFavorite(req, res) {
+  checkFavorite = async (req, res) => {
     console.log("Check favorite endpoint hit");
     try {
-      const { userId, movieId } = req.params;
+      const { movieId } = req.params;
       
-      const isFavorite = await this.favoriteService.isFavorite(userId, movieId);
+      const isFavorite = await this.favoriteService.isFavorite(req.user.id, movieId);
       
       return res.status(200).json({ 
         isFavorite 

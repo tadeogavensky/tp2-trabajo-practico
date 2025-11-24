@@ -3,100 +3,104 @@ class RatingController {
     this.ratingService = ratingService;
   }
 
-  //obtener todas las calificaciones de un usuario
-  async getAllRatings(req, res) {
+  getAllRatings = async (req, res) => {
     console.log("Get ratings endpoint hit!");
     try {
-      const { userId } = req.params;
-      const ratings = await this.ratingService.getRatingsByUser(userId);
+      const ratings = await this.ratingService.getRatingsByUser(req.user.id);
       res.status(200).json(ratings);
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
-  }
+  };
 
-  // agregar rating
-  async addRating(req, res) {
+  addRating = async (req, res) => {
     console.log("Add rating endpoint hit!");
     try {
-      const { userId, movieId, score } = req.body;
-      if (!userId || !movieId || score == null) {
+      const { movieId, score } = req.body;
+      if (!movieId || score == null) {
         return res.status(400).json({
-          error: 'userId, movieId and score are required'
+          error: "movieId and score are required",
         });
       }
 
-      const rating = await this.ratingService.addRating(userId, movieId, score);
+      const rating = await this.ratingService.addRating(
+        req.user.id,
+        movieId,
+        score
+      );
       return res.status(201).json({
-        message: 'Rating added successfully',
-        rating
+        message: "Rating added successfully",
+        rating,
       });
-
     } catch (error) {
-      if (error.message.includes('already rated')) {
+      if (error.message.includes("already rated")) {
         return res.status(400).json({ error: error.message });
       }
       return res.status(500).json({ error: error.message });
-  
     }
-  } 
-  
-  //update rating
-  async updateRating(req, res) {
+  };
+
+  updateRating = async (req, res) => {
     console.log("Update rating endpoint hit!");
     try {
-      const { userId, movieId, score } = req.body;
-      if (!userId || !movieId || score == null) {
+      const { movieId, score } = req.body;
+      if (!movieId || score == null) {
         return res.status(400).json({
-          error: 'userId, movieId and score are required'
+          error: "movieId and score are required",
         });
       }
-      const rating = await this.ratingService.updateRating(userId, movieId, score);
+      const rating = await this.ratingService.updateRating(
+        req.user.id,
+        movieId,
+        score
+      );
       return res.status(200).json({
-        message: 'Rating updated successfully',
-        rating
+        message: "Rating updated successfully",
+        rating,
       });
     } catch (error) {
-      if (error.message.includes('Rating not found')) {
+      if (error.message.includes("Rating not found")) {
         return res.status(404).json({ error: error.message });
       }
       return res.status(500).json({ error: error.message });
     }
-  }
+  };
 
   //eliminar rating
-  async removeRating(req, res) {
+  removeRating = async (req, res) => {
     console.log("Remove rating endpoint hit!");
     try {
-      const { userId, movieId } = req.body;
-      if (!userId || !movieId) {
+      const { movieId } = req.body;
+      if (!movieId) {
         return res.status(400).json({
-          error: 'userId and movieId are required'
+          error: "movieId is required",
         });
       }
-      await this.ratingService.removeRating(userId, movieId);
+      await this.ratingService.removeRating(req.user.id, movieId);
       return res.status(200).json({
-        message: 'Rating removed successfully'
+        message: "Rating removed successfully",
       });
     } catch (error) {
-      if (error.message.includes('not found')) {
+      if (error.message.includes("not found")) {
         return res.status(404).json({ error: error.message });
       }
       return res.status(500).json({ error: error.message });
     }
-  }
+  };
 
-  //verficar si ya fue calificada
-  async checkRating(req, res) {
+  checkRating = async (req, res) => {
     console.log("Check rating endpoint hit!");
     try {
-      const { userId, movieId } = req.params;
-      const exists = await this.ratingService.ratingExists(userId, movieId);
+      const { movieId } = req.params;
+      const exists = await this.ratingService.ratingExists(
+        req.user.id,
+        movieId
+      );
       return res.status(200).json({ rated: exists });
     } catch (error) {
       return res.status(500).json({ error: error.message });
     }
-  }
+  };
 }
 
 export default RatingController;

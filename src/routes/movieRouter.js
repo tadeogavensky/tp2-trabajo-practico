@@ -1,30 +1,17 @@
 import { Router } from "express";
-import MovieController from "../controllers/MovieController.js";
-import CommentController from "../controllers/CommentController.js";
-import MovieService from "../services/movieService.js";
+import { movieController } from "../containers/movieContainer.js";
+import { commentController } from "../containers/commentContainer.js";
+
+import { authenticate } from "../middlewares/userMiddleware.js";
 
 const movieRouter = Router();
 
-const movieController = new MovieController(new MovieService());
+movieRouter.get("/", movieController.getAllMovies);
 
-movieRouter.get(
-  "/:tmdbId",
-  (req, res, next) => movieController.getMovieMetaData(req, res, next)
-);
+movieRouter.get("/:tmdbId", movieController.getMovieMetaData);
 
-movieRouter.post(
-  "/",
-  (req, res, next) => movieController.createOrUpdateMovie(req, res, next)
-);
+movieRouter.post("/", authenticate, movieController.createOrUpdateMovie);
 
-movieRouter.get(
-  "/:movieId/comments",
-  (req, res, next) => CommentController.getCommentsByMovie(req, res, next)
-);
-
-movieRouter.get(
-  "/",
-  (req, res, next) => movieController.getAllMovies(req, res, next)
-);
+movieRouter.get("/:movieId/comments", commentController.getCommentsByMovie);
 
 export default movieRouter;

@@ -1,13 +1,17 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { SECRET_KEY } from "../../index.js";
+import dotenv from "dotenv";
 
-export function isEmailValid(email) {
+dotenv.config();
+
+const SECRET_KEY = process.env.JWT_SECRET;
+
+export const isEmailValid = (email) => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);
-}
+};
 
-export function isPasswordStrong(password) {
+export const isPasswordStrong = (password) => {
   if (!password) return false;
 
   // Prevent very long strings from overwhelming the regex
@@ -18,13 +22,13 @@ export function isPasswordStrong(password) {
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,64}$/;
 
   return passwordRegex.test(password);
-}
+};
 
-export function isAgeValid(age) {
+export const isAgeValid = (age) => {
   return age >= 0 && age <= 120;
-}
+};
 
-export function isFirstNameValid(firstName) {
+export const isFirstNameValid = (firstName) => {
   const hasNumber = /\d/;
   return (
     typeof firstName === "string" &&
@@ -32,9 +36,9 @@ export function isFirstNameValid(firstName) {
     firstName.length <= 50 &&
     !hasNumber.test(firstName)
   );
-}
+};
 
-export function isLastNameValid(lastName) {
+export const isLastNameValid = (lastName) => {
   const hasNumber = /\d/;
   return (
     typeof lastName === "string" &&
@@ -42,33 +46,33 @@ export function isLastNameValid(lastName) {
     lastName.length <= 50 &&
     !hasNumber.test(lastName)
   );
-}
+};
 
-export function isUsernameValid(username) {
+export const isUsernameValid = (username) => {
   return (
     typeof username === "string" &&
     username.length >= 2 &&
     username.length <= 50
   );
-}
+};
 
-export async function hashPassword(password) {
+export const hashPassword = async (password) => {
   const saltRounds = 10;
   return await bcrypt.hash(password, saltRounds);
-}
+};
 
-export async function comparePassword(password, hashedPassword) {
+export const comparePassword = async (password, hashedPassword) => {
   return await bcrypt.compare(password, hashedPassword);
-}
+};
 
-export function generateJWT(payload, expiresIn = "1h") {
+export const generateJWT = (payload, expiresIn = "1h") => {
   return jwt.sign(payload, SECRET_KEY, { expiresIn });
-}
+};
 
-export function verifyJWT(token) {
+export const verifyJWT = (token) => {
   try {
     return jwt.verify(token, SECRET_KEY);
   } catch (error) {
     return null;
   }
-}
+};
