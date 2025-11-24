@@ -1,9 +1,8 @@
-
 class WatchlistController {
-  constructor(WatchListService) {
-    this.watchlistService = WatchListService;
+  constructor(watchlistService) {
+    this.watchlistService = watchlistService;
   }
-  async getWatchlist(req, res) {
+  getWatchlist = async (req, res) => {
     const userId = req.user.id;
     try {
       const watchlist = await this.watchlistService.getWatchlist(userId);
@@ -11,8 +10,8 @@ class WatchlistController {
     } catch (error) {
       return res.status(500).json({ error: error.message });
     }
-  }
-  async getWatchItemById(req, res) {
+  };
+  getWatchItemById = async (req, res) => {
     const userId = req.user.id;
     const movieId = req.params.id;
     try {
@@ -24,8 +23,8 @@ class WatchlistController {
     } catch (error) {
       return res.status(500).json({ error: error.message });
     }
-  }
-  async addToWatchlist(req, res) {
+  };
+  addToWatchlist = async (req, res) => {
     const userId = req.user.id;
     const movieId = req.params.id;
     try {
@@ -37,18 +36,20 @@ class WatchlistController {
     } catch (error) {
       return res.status(500).json({ error: error.message });
     }
-  }
-  async removeFromWatchlist(req, res) {
+  };
+  removeFromWatchlist = async (req, res) => {
     const userId = req.user.id;
     const movieId = req.params.id;
     try {
       await this.watchlistService.removeFromWatchlist(movieId, userId);
-      return res.status(204).send();
+      return res.status(204).json({
+        message: "Item removed from watchlist successfully",
+      });
     } catch (error) {
       return res.status(500).json({ error: error.message });
     }
-  }
-  async resetWatchlist(req, res) {
+  };
+  resetWatchlist = async (req, res) => {
     const userId = req.user.id;
     try {
       await this.watchlistService.resetWatchlist(userId);
@@ -56,7 +57,7 @@ class WatchlistController {
     } catch (error) {
       return res.status(500).json({ error: error.message });
     }
-  }
+  };
 }
 
 export default WatchlistController;

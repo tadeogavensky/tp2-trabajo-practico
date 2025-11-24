@@ -1,25 +1,22 @@
 import { Movie } from "../models/index.js";
 
 class MovieService {
-  async getMovieByTmdbId(tmdbId) {
+  getMovieByTmdbId = async (tmdbId) => {
     const movie = await Movie.findOne({ where: { tmdbId } });
     return movie;
-  }
+  };
 
-  async createOrUpdateMovie(movieData) {
-    // 1. Intentar encontrar la película por el campo UNIQUE (tmdbId)
+  createOrUpdateMovie = async (movieData) => {
     let movie = await Movie.findOne({ where: { tmdbId: movieData.tmdbId } });
 
     let created = false;
 
     if (movie) {
-      // 2. Si la encuentra, la actualiza (UPDATE)
       await movie.update({
         ...movieData,
         last_fetched_at: new Date(),
       });
     } else {
-      // 3. Si NO la encuentra, la crea (CREATE)
       movie = await Movie.create({
         ...movieData,
         last_fetched_at: new Date(),
@@ -28,19 +25,19 @@ class MovieService {
     }
 
     return [movie, created];
-  }
+  };
 
-  async getMovieById(id) {
+  getMovieById = async (id) => {
     const movie = await Movie.findByPk(id);
     return movie;
-  }
+  };
 
-  async getAllMovies() {
+  getAllMovies = async () => {
     const movies = await Movie.findAll({
       order: [["createdAt", "DESC"]],
     });
     return movies;
-  }
+  };
 }
 
 export default MovieService;

@@ -1,29 +1,28 @@
-class MovieController { 
+class MovieController {
   constructor(movieService) {
     this.movieService = movieService;
-
-    this.getAllMovies = this.getAllMovies.bind(this);
-    this.getMovieMetaData = this.getMovieMetaData.bind(this);
-    this.createOrUpdateMovie = this.createOrUpdateMovie.bind(this);
   }
 
-  
   createOrUpdateMovie = async (req, res, next) => {
     try {
       const movieData = req.body;
 
       if (!movieData.tmdbId || !movieData.title) {
-        return res.status(400).json({ message: "tmdbId y title son requeridos" });
+        return res
+          .status(400)
+          .json({ message: "tmdbId and title are required" });
       }
 
-      const [movie, created] = await this.movieService.createOrUpdateMovie(movieData);
+      const [movie, created] = await this.movieService.createOrUpdateMovie(
+        movieData
+      );
 
       const status = created ? 201 : 200;
 
       return res.status(status).json({
-        message: created 
-          ? "Pelicula guardada exitosamente." 
-          : "Pelicula actualizada exitosamente",
+        message: created
+          ? "Movie saved successfully."
+          : "Movie updated successfully",
         movie,
       });
     } catch (error) {
@@ -38,7 +37,7 @@ class MovieController {
       const movie = await this.movieService.getMovieByTmdbId(tmdbId);
 
       if (!movie) {
-        return res.status(404).json({ message: "Película no encontrada" });
+        return res.status(404).json({ message: "Movie not found" });
       }
 
       return res.status(200).json(movie);

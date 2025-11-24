@@ -7,12 +7,9 @@ import {
   validateSignUpFields,
   validateUpdateFields,
 } from "../middlewares/userMiddleware.js";
+import { userController } from "../containers/userContainer.js";
 
-import { UserController } from "../controllers/index.js";
-import UserService from "../services/userService.js";
 const usersRouter = Router();
-
-const userController = new UserController(new UserService());
 
 usersRouter.get("/test", (req, res) => {
   res.send("User router hit!");
@@ -22,20 +19,12 @@ usersRouter.post(
   validateSignUpFields,
   checkUserEmailExists,
   checkUserUsernameExists,
-  userController.createUser.bind(userController)
+  userController.register
 );
 
-usersRouter.post(
-  "/login",
-  validateLoginFields,
-  userController.login.bind(userController)
-);
+usersRouter.post("/login", validateLoginFields, userController.login);
 
-usersRouter.get(
-  "/profile",
-  authenticate,
-  userController.getUserProfile.bind(userController)
-);
+usersRouter.get("/profile", authenticate, userController.getUserProfile);
 
 usersRouter.put(
   "/",
@@ -43,13 +32,9 @@ usersRouter.put(
   validateUpdateFields,
   checkUserEmailExists,
   checkUserUsernameExists,
-  userController.updateUser.bind(userController)
-)
-
-usersRouter.delete(
-  "/",
-  authenticate,
-  userController.deleteUser.bind(userController)
+  userController.updateUser
 );
+
+usersRouter.delete("/", authenticate, userController.deleteUser);
 
 export default usersRouter;

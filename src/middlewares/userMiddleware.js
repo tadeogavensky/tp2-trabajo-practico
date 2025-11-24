@@ -11,45 +11,43 @@ import {
 
 import USER_FIELD_ERRORS from "../errors/user.js";
 
-export async function checkUserEmailExists(req, res, next) {
+export const checkUserEmailExists = async (req, res, next) => {
+  const { email } = req.body;
+  if (!email) return next();
+
   try {
-    const { email } = req.body;
     const existingUser = await User.findOne({ where: { email } });
-
     if (!req.user && existingUser) {
       return res.status(409).json({ error: USER_FIELD_ERRORS.EMAIL_TAKEN });
     }
-
-    if (req.user && existingUser && existingUser.id !== req.user.userId) {
+    if (req.user && existingUser && existingUser.id !== req.user.id) {
       return res.status(409).json({ error: USER_FIELD_ERRORS.EMAIL_TAKEN });
     }
-
     next();
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
-}
+};
 
-export async function checkUserUsernameExists(req, res, next) {
+export const checkUserUsernameExists = async (req, res, next) => {
+  const { username } = req.body;
+  if (!username) return next();
+
   try {
-    const { username } = req.body;
     const existingUser = await User.findOne({ where: { username } });
-
     if (!req.user && existingUser) {
       return res.status(409).json({ error: USER_FIELD_ERRORS.USERNAME_TAKEN });
     }
-
-    if (req.user && existingUser && existingUser.id !== req.user.userId) {
+    if (req.user && existingUser && existingUser.id !== req.user.id) {
       return res.status(409).json({ error: USER_FIELD_ERRORS.USERNAME_TAKEN });
     }
-
     next();
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
-}
+};
 
-export async function validateEmailFormat(req, res, next) {
+export const validateEmailFormat = (req, res, next) => {
   const { email } = req.body;
 
   if (!isEmailValid(email)) {
@@ -57,9 +55,9 @@ export async function validateEmailFormat(req, res, next) {
   }
 
   next();
-}
+};
 
-export async function validatePasswordStrength(req, res, next) {
+export const validatePasswordStrength = (req, res, next) => {
   const { password } = req.body;
 
   if (!isPasswordStrong(password)) {
@@ -67,10 +65,9 @@ export async function validatePasswordStrength(req, res, next) {
   }
 
   next();
-}
+};
 
-export async function validateSignUpFields(req, res, next) {
-  console.log("Validating sign-up fields");
+export const validateSignUpFields = (req, res, next) => {
   const { firstName, lastName, age, username, email, password } = req.body;
   const missingFields = [];
 
@@ -78,7 +75,7 @@ export async function validateSignUpFields(req, res, next) {
   if (!password) missingFields.push("password");
   if (!firstName) missingFields.push("firstName");
   if (!lastName) missingFields.push("lastName");
-  if (!age) missingFields.push("age");
+  if (age == null) missingFields.push("age");
   if (!username) missingFields.push("username");
 
   if (missingFields.length > 0) {
@@ -113,14 +110,16 @@ export async function validateSignUpFields(req, res, next) {
     return res.status(400).json({ error: USER_FIELD_ERRORS.USERNAME_INVALID });
   }
 
-  if (!isAgeValid(age)) {
+  const parsedAge = Number(age);
+  if (!Number.isInteger(parsedAge) || !isAgeValid(parsedAge)) {
     return res.status(400).json({ error: USER_FIELD_ERRORS.AGE_INVALID });
   }
+  req.body.age = parsedAge;
 
   next();
-}
+};
 
-export async function validateLoginFields(req, res, next) {
+export const validateLoginFields = (req, res, next) => {
   const { email, password } = req.body;
   const missingFields = [];
 
@@ -137,9 +136,9 @@ export async function validateLoginFields(req, res, next) {
     return res.status(400).json({ error: USER_FIELD_ERRORS.EMAIL_INVALID });
   }
   next();
-}
+};
 
-export async function validateUpdateFields(req, res, next) {
+export const validateUpdateFields = (req, res, next) => {
   const { firstName, lastName, age, username, email, password } = req.body;
 
   if (firstName && !isFirstNameValid(firstName)) {
@@ -164,32 +163,36 @@ export async function validateUpdateFields(req, res, next) {
     return res.status(400).json({ error: USER_FIELD_ERRORS.PASSWORD_WEAK });
   }
 
-  if (age && !isAgeValid(age)) {
-    return res.status(400).json({ error: USER_FIELD_ERRORS.AGE_INVALID });
+  if (age !== undefined) {
+    const parsedAge = Number(age);
+    if (!Number.isInteger(parsedAge) || !isAgeValid(parsedAge)) {
+      return res.status(400).json({ error: USER_FIELD_ERRORS.AGE_INVALID });
+    }
+    req.body.age = parsedAge;
   }
 
   next();
-}
+};
 
-export async function authenticate(req, res, next) {
+export const authenticate = async (req, res, next) => {
   const authHeader = req.headers.authorization;
   const token = authHeader && authHeader.split(" ")[1]; // Bearer TOKEN
 
   if (!token) {
     return res.status(401).json({ error: USER_FIELD_ERRORS.TOKEN_INVALID });
   }
-    const payload = verifyJWT(token);
-    
-    if (!payload || !payload.userId) {
-        return res.status(403).json({ error: 'TOKEN_INVALID_FORMAT' });
-    }
-    
-    const user = await User.findByPk(payload.userId);
+  const payload = verifyJWT(token);
 
-    if (!user) {
-        return res.status(404).json({ error: 'USER_NOT_FOUND' });
-    }
-    req.user = user; 
-    
-    next();
-}
+  if (!payload || !payload.userId) {
+    return res.status(403).json({ error: "TOKEN_INVALID_FORMAT" });
+  }
+
+  const user = await User.findByPk(payload.userId);
+
+  if (!user) {
+    return res.status(404).json({ error: "USER_NOT_FOUND" });
+  }
+  req.user = user;
+
+  next();
+};

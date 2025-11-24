@@ -5,7 +5,7 @@ class UserController {
   constructor(userService) {
     this.userService = userService;
   }
-  async createUser(req, res) {
+   register = async (req, res) => {
     console.log("Signup endpoint hit! 🧑🏻‍🦱");
 
     try {
@@ -30,7 +30,7 @@ class UserController {
     }
   }
 
-  async login(req, res) {
+  login = async (req, res) => {
     console.log("Login endpoint hit! 🧑🏻‍🦱");
     try {
       const { email, password, rememberMe } = req.body;
@@ -72,7 +72,7 @@ class UserController {
     }
   }
 
-  async getUserProfile(req, res) {
+  getUserProfile = async (req, res) => {
     try {
       const user = await this.userService.getUserById(req.user.id);
       if (!user) return res.status(404).json({ error: "User not found" });
@@ -84,7 +84,7 @@ class UserController {
     }
   }
 
-  async updateUser(req, res) {
+  updateUser = async (req, res) => {
     try {
       const userData = req.body;
       const updatedUser = await this.userService.updateUser(
@@ -98,7 +98,7 @@ class UserController {
     }
   }
 
-  async deleteUser(req, res) {
+  deleteUser = async (req, res) => {
     try {
       await this.userService.deleteUser(req.user.id);
       return res.status(200).json({ message: "User deleted successfully" });

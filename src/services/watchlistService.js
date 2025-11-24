@@ -1,21 +1,19 @@
-import { WatchList } from "../models/index.js";
-import MovieService from "../services/moviesService.js";
+import { Movie, WatchList } from "../models/index.js";
 import WATCHLIST_ERRORS from "../errors/watchlist.js";
 
-class WatchListService {
-  constructor() {
-    this.movieService = new MovieService();
-  }
-  // PRIVATE helper - does NOT throw
-  async findItem(movieId, userId) {
-    return await WatchList.findOne({
-      where: { movieId, userId },
-    });
+class WatchlistService {
+  constructor(movieService) {
+    this.movieService = movieService;
   }
 
-  // GET all items
-  async getWatchlist(userId) {
-    const items = await WatchList.findAll({ where: { userId } });
+  findItem = async (movieId, userId) => {
+    return await WatchList.findOne({
+      where: { movieId, userId }, include: Movie
+    });
+  };
+
+  getWatchlist = async (userId) => {
+    const items = await WatchList.findAll({ where: { userId }, include: Movie });
 
     if (items && items.length > 0) {
       console.log(
@@ -27,41 +25,36 @@ class WatchListService {
     }
 
     return items;
-  }
+  };
 
-  // GET one item (public) - throws if not found
-    async getWatchItemById(tmdbId, userId) {
-        const movie = await this.movieService.getMovieByTmdbId(tmdbId);
-        if (!movie) throw new Error(WATCHLIST_ERRORS.MOVIE_NOT_FOUND);
+  getWatchItemById = async (tmdbId, userId) => {
+    const movie = await this.movieService.getMovieByTmdbId(tmdbId);
+    if (!movie) throw new Error(WATCHLIST_ERRORS.MOVIE_NOT_FOUND);
 
-        const item = await this.findItem(movie.id, userId);
-        if (!item) throw new Error(WATCHLIST_ERRORS.ITEM_NOT_IN_WATCHLIST);
+    const item = await this.findItem(movie.id, userId);
+    if (!item) throw new Error(WATCHLIST_ERRORS.ITEM_NOT_IN_WATCHLIST);
 
-        return item;
-    }
+    return item;
+  };
 
-  // ADD
-  async addToWatchlist(tmdbId, userId) {
-    // 1. Find movie by tmdbId (returns the movie object)
+  addToWatchlist = async (tmdbId, userId) => {
     const movie = await this.movieService.getMovieByTmdbId(tmdbId);
     if (!movie) {
       throw new Error(WATCHLIST_ERRORS.MOVIE_NOT_FOUND);
     }
 
-    // 2. Check if already in watchlist
     const exists = await this.findItem(movie.id, userId);
     if (exists) {
       throw new Error(WATCHLIST_ERRORS.ITEM_ALREADY_IN_WATCHLIST);
     }
 
-    // 3. Insert USING THE INTERNAL DB ID, NOT TMDB ID
     return await WatchList.create({
-      movieId: movie.id, // ✔ fixed
+      movieId: movie.id,
       userId,
     });
-  }
-  // REMOVE
-  async removeFromWatchlist(movieId, userId) {
+  };
+
+  removeFromWatchlist = async (movieId, userId) => {
     const movie = await this.movieService.getMovieByTmdbId(movieId);
     if (!movie) {
       throw new Error(WATCHLIST_ERRORS.MOVIE_NOT_FOUND);
@@ -80,10 +73,9 @@ class WatchListService {
     );
 
     return true;
-  }
+  };
 
-  // CLEAR all
-  async resetWatchlist(userId) {
+  resetWatchlist = async (userId) => {
     const deleted = await WatchList.destroy({ where: { userId } });
 
     console.log(
@@ -91,7 +83,7 @@ class WatchListService {
     );
 
     return deleted;
-  }
+  };
 }
 
-export default WatchListService;
+export default WatchlistService;
