@@ -1,4 +1,5 @@
 import { WatchList } from "../models/index.js";
+import MovieService from "../services/moviesService.js";
 import WATCHLIST_ERRORS from "../errors/watchlist.js";
 
 class WatchListService {
@@ -42,10 +43,10 @@ class WatchListService {
   // ADD
     async addToWatchlist(movieId, userId) {
         // 1. Verify that the movie exists
-/*         const movie = await Movie.findByPk(movieId);
+         const movie = await MovieService.getMovieById(movieId);
             if (!movie) {
             throw new Error(WATCHLIST_ERRORS.MOVIE_NOT_FOUND);
-        } */
+        } 
 
         // 2. Verify that it's not already in the user's watchlist
         const exists = await this.findItem(movieId, userId);

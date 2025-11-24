@@ -1,4 +1,3 @@
-import WatchListService from "../services/watchlistService.js";
 
 class WatchlistController {
   constructor(WatchListService) {
