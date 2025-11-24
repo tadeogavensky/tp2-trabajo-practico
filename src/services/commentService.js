@@ -1,43 +1,45 @@
 import { Comment, User } from "../models/index.js";
 
 class CommentService {
-
-  async getCommentById(id) {
+  getCommentById = async (id) => {
     const comment = await Comment.findByPk(id);
     return comment;
-  }
+  };
 
-  async getCommentsByMovieId(movieId) {
+  getCommentsByMovieId = async (movieId) => {
     const comments = await Comment.findAll({
       where: { movieId },
       include: [
         {
           model: User,
-          attributes: ['id', 'username', 'firstName', 'lastName'],
+          attributes: ["id", "username", "firstName", "lastName"],
         },
       ],
-      order: [['createdAt', 'DESC']],
+      order: [["createdAt", "DESC"]],
     });
     return comments;
-  }
+  };
 
-  async createComment({ userId, movieId, comment }) {
+  createComment = async ({ userId, movieId, comment }) => {
     const newComment = await Comment.create({
       userId,
       movieId,
       comment,
     });
-    
-    // Optional
+
     const createdComment = await Comment.findByPk(newComment.id, {
-        include: [{ model: User, attributes: ['id', 'username', 'firstName', 'lastName'] }]
+      include: [
+        {
+          model: User,
+          attributes: ["id", "username", "firstName", "lastName"],
+        },
+      ],
     });
 
     return createdComment;
-  }
+  };
 
-
-  async updateComment(id, newCommentText) {
+  updateComment = async (id, newCommentText) => {
     const comment = await Comment.findByPk(id);
 
     if (!comment) {
@@ -46,13 +48,12 @@ class CommentService {
 
     await comment.update({ comment: newCommentText });
     return comment;
-  }
+  };
 
-
-  async deleteComment(id) {
+  deleteComment = async (id) => {
     const deletedRows = await Comment.destroy({ where: { id } });
     return deletedRows;
-  }
+  };
 }
 
 export default CommentService;

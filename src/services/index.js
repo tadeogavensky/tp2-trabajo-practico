@@ -1,15 +1,15 @@
-import CommentsService from "./commentsService.js";
-import favoritesService from "./favoritesService.js";
-import MoviesService from "./moviesService.js";
-import ratingsService from "./ratingsService.js";
-import UserService from "./userService.js";
-import WatchListService from "./watchlistService.js";
+import CommentService from "./CommentService.js";
+import FavoriteService from "./FavoriteService.js";
+import MovieService from "./MovieService.js";
+import RatingService from "./RatingService.js";
+import UserService from "./UserService.js";
+import WatchlistService from "./WatchlistService.js";
 
 export {
-  CommentsService,
-  favoritesService,
-  MoviesService,
-  ratingsService,
+  CommentService,
+  FavoriteService,
+  MovieService,
+  RatingService,
   UserService,
-  WatchListService,
+  WatchlistService,
 };

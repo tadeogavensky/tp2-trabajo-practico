@@ -1,25 +1,25 @@
 import { User } from "../models/index.js";
 import { comparePassword } from "../utils/user.js";
 class UserService {
-  async getAllUsers() {
+  getAllUsers = async () => {
     const users = await User.findAll();
 
     return users;
-  }
+  };
 
-  async getUserById(id) {
+  getUserById = async (id) => {
     const user = await User.findByPk(id);
     return user;
-  }
+  };
 
-  async createUser({
+  createUser = async ({
     firstName,
     lastName,
     age,
     username,
     email,
     hashedPassword,
-  }) {
+  }) => {
     const newUser = await User.create({
       firstName,
       lastName,
@@ -31,9 +31,9 @@ class UserService {
 
     const { hashedPassword: _, ...safeUser } = newUser.toJSON(); // Exclude hashedPassword
     return safeUser;
-  }
+  };
 
-  async authenticateUser(email, password) {
+  authenticateUser = async (email, password) => {
     const user = await User.findOne({ where: { email } });
 
     if (!user) {
@@ -43,21 +43,21 @@ class UserService {
     if (user && (await comparePassword(password, user.hashedPassword))) {
       return user;
     }
-  }
+  };
 
-  async updateUser(id, userData) {
+  updateUser = async (id, userData) => {
     const user = await User.findByPk(id);
 
     await user.update(userData);
     return user;
-  }
+  };
 
-  async deleteUser(id) {
+  deleteUser = async (id) => {
     const user = await User.findByPk(id);
 
     await user.destroy();
     return user;
-  }
+  };
 }
 
 export default UserService;
