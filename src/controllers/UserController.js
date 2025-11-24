@@ -74,7 +74,7 @@ class UserController {
 
   async getUserProfile(req, res) {
     try {
-      const user = await this.userService.getUserById(req.user.userId);
+      const user = await this.userService.getUserById(req.user.id);
       if (!user) return res.status(404).json({ error: "User not found" });
 
       const { hashedPassword, ...safeUser } = user.toJSON();
@@ -88,7 +88,7 @@ class UserController {
     try {
       const userData = req.body;
       const updatedUser = await this.userService.updateUser(
-        req.user.userId,
+        req.user.id,
         userData
       );
       const { hashedPassword, ...safeUser } = updatedUser.toJSON(); // Exclude hashedPassword
@@ -100,7 +100,7 @@ class UserController {
 
   async deleteUser(req, res) {
     try {
-      await this.userService.deleteUser(req.user.userId);
+      await this.userService.deleteUser(req.user.id);
       return res.status(200).json({ message: "User deleted successfully" });
     } catch (error) {
       return res.status(500).json({ error: error.message });
