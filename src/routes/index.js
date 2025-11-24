@@ -1,10 +1,10 @@
 import express from "express";
 
 import usersRouter from "./usersRouter.js";
-import moviesRouter from "./moviesRouter.js";
+import moviesRouter from "./movieRouter.js";
 import watchlistRouter from "./watchlistRouter.js";
 import favoritesRouter from "./favoritesRouter.js";
-import commentsRouter from "./commentsRouter.js";
+import commentsRouter from "./commentRouter.js";
 import ratingsRouter from "./ratingsRouter.js";
 
 const router = express.Router();

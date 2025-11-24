@@ -1,8 +1,8 @@
-import CommentService from '../services/commentsService.js';
-
-const commentService = new CommentService();
 
 class CommentController {
+    constructor(commentService) {
+        this.commentService = commentService;
+    }
     
     // OBTENER COMENTARIOS POR PELÍCULA (GET /api/movies/:movieId/comments)
     async getCommentsByMovie(req, res, next) {
@@ -85,4 +85,4 @@ class CommentController {
     }
 }
 
-export default new CommentController();
+export default CommentController;

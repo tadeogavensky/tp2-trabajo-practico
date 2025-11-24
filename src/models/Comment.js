@@ -3,9 +3,9 @@
 import { Model, DataTypes } from "sequelize";
 import connection from "../database/connection.js";
 
-class Comments extends Model { }
+class Comment extends Model { }
 
-Comments.init(
+Comment.init(
   {
     id: {
       type: DataTypes.INTEGER,
@@ -30,25 +30,25 @@ Comments.init(
   },
   {
     sequelize: connection,
-    modelName: "Comments",
-    tableName: "comments",
+    modelName: "Comment",
+    tableName: "Comment",
     timestamps: true,
 
     indexes: [{ fields: ["userId", "movieId"] }, { fields: ["movieId"] }],
   }
 );
 
-Comments.associate = (models) => {
+Comment.associate = (models) => {
   // user 
-  Comments.belongsTo(models.User, {
+  Comment.belongsTo(models.User, {
     foreignKey: 'userId',
   });
 
   // movie
-  Comments.belongsTo(models.Movie, {
+  Comment.belongsTo(models.Movie, {
     foreignKey: 'movieId',
     as: 'movie',
   });
 };
 
-export default Comments;
+export default Comment;

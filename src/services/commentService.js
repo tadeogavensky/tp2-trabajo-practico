@@ -1,14 +1,14 @@
-import { Comments, User } from "../models/index.js";
+import { Comment, User } from "../models/index.js";
 
-class CommentsService {
+class CommentService {
 
   async getCommentById(id) {
-    const comment = await Comments.findByPk(id);
+    const comment = await Comment.findByPk(id);
     return comment;
   }
 
   async getCommentsByMovieId(movieId) {
-    const comments = await Comments.findAll({
+    const comments = await Comment.findAll({
       where: { movieId },
       include: [
         {
@@ -22,14 +22,14 @@ class CommentsService {
   }
 
   async createComment({ userId, movieId, comment }) {
-    const newComment = await Comments.create({
+    const newComment = await Comment.create({
       userId,
       movieId,
       comment,
     });
     
     // Optional
-    const createdComment = await Comments.findByPk(newComment.id, {
+    const createdComment = await Comment.findByPk(newComment.id, {
         include: [{ model: User, attributes: ['id', 'username', 'firstName', 'lastName'] }]
     });
 
@@ -38,7 +38,7 @@ class CommentsService {
 
 
   async updateComment(id, newCommentText) {
-    const comment = await Comments.findByPk(id);
+    const comment = await Comment.findByPk(id);
 
     if (!comment) {
       return null;
@@ -50,9 +50,9 @@ class CommentsService {
 
 
   async deleteComment(id) {
-    const deletedRows = await Comments.destroy({ where: { id } });
+    const deletedRows = await Comment.destroy({ where: { id } });
     return deletedRows;
   }
 }
 
-export default CommentsService;
+export default CommentService;
