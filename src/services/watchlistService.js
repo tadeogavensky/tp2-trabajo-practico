@@ -3,6 +3,10 @@ import MovieService from "../services/moviesService.js";
 import WATCHLIST_ERRORS from "../errors/watchlist.js";
 
 class WatchListService {
+
+    constructor(){
+        this.movieService = new MovieService();
+    }
   // PRIVATE helper - does NOT throw
   async findItem(movieId, userId) {
     return await WatchList.findOne({ where: { movieId, userId } });
@@ -43,7 +47,7 @@ class WatchListService {
   // ADD
     async addToWatchlist(movieId, userId) {
         // 1. Verify that the movie exists
-         const movie = await MovieService.getMovieById(movieId);
+         const movie = await movieService.getMovieByTmdbId(movieId);
             if (!movie) {
             throw new Error(WATCHLIST_ERRORS.MOVIE_NOT_FOUND);
         } 
