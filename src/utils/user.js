@@ -29,22 +29,22 @@ export const isAgeValid = (age) => {
 };
 
 export const isFirstNameValid = (firstName) => {
-  const hasNumber = /\d/;
+  const onlyLetters = /^[A-Za-zÁÉÍÓÚáéíóúÑñ]+$/;
   return (
     typeof firstName === "string" &&
     firstName.length >= 2 &&
     firstName.length <= 50 &&
-    !hasNumber.test(firstName)
+    onlyLetters.test(firstName)
   );
 };
 
 export const isLastNameValid = (lastName) => {
-  const hasNumber = /\d/;
+  const onlyLetters = /^[A-Za-zÁÉÍÓÚáéíóúÑñ]+$/;
   return (
     typeof lastName === "string" &&
     lastName.length >= 2 &&
     lastName.length <= 50 &&
-    !hasNumber.test(lastName)
+    onlyLetters.test(lastName)
   );
 };
 
